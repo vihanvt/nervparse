@@ -20,15 +20,18 @@ class ParserModel(nn.Module):
         self.logits=nn.Linear(hiddenneurons,3)
 
     def forward(self,wordid,posid,labelid):
-        wordemb=self.wordembed(wordid).view(wordid.size(0), -1)
-        posemb=self.posembed(posid).view(wordid.size(0), -1)
-        labelemb=self.labelembed(labelid).view(wordid.size(0), -1)
+        wordemb = self.wordembed(wordid.unsqueeze(0))
+        wordemb = wordemb.view(wordemb.size(0), -1)
+        posemb=self.posembed(posid.unsqueeze(0))
+        posemb=posemb.view(posemb.size(0),-1)
+        labelemb=self.labelembed(labelid.unsqueeze(0))
+        labelemb=labelemb.view(labelemb.size(0),-1)
         joined=torch.cat([wordemb,posemb,labelemb],dim=1)
-
-        #activation function=cube activation
-        cube=torch.pow(joined,3)
-        drop=self.dropout(cube)
-        logits=self.logits(drop)
+        #adding the cube activation func
+        hidden_out = self.hidden(joined)  
+        cube = torch.pow(hidden_out, 3)    
+        drop = self.dropout(cube)
+        logits = self.logits(drop)        
         return logits
     
     def predict(self,features_batch):

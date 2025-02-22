@@ -14,34 +14,31 @@ def oracle(sentence, gold_dependencies):
             valid_actions.append("S")
         if len(pp.stack) >= 2:
             valid_actions.extend(["LA", "RA"])
-        
+
         if len(pp.stack) >= 2:
             top = pp.stack[-1]
             second = pp.stack[-2]
-    
-            # Check for left arc
+            #check the top and second element for left arc
             if (top["index"], second["index"]) in gold_dependencies:
                 transitions.append("LA")
                 pp.parse_step("LA")
                 continue
-            # Check for right arc
+            #check the second and top for right arc
             elif (second["index"], top["index"]) in gold_dependencies:
                 transitions.append("RA")
                 pp.parse_step("RA")
                 continue
-    
-        # Default to Shift if no arc is valid and buffer is not empty
+
         if pp.buffer:
             transitions.append("S")
             pp.parse_step("S")
         else:
-            break  # Stop if buffer is empty and no valid actions remain
-    
+            break 
+
+    print(f"Transitions: {transitions}")  
     return transitions
 
-# Define transition mapping
 transition_to_idx = {"S": 0, "LA": 1, "RA": 2}
-
 train_sentences = load("data/train.conll")
 wordvocab, posvocab, labelvocab = vocab(train_sentences)
 model = ParserModel(
@@ -64,22 +61,21 @@ for epoch in range(num_epochs):
         pp = PartialParse(sentence, wordvocab, posvocab, labelvocab)
         gold_dependencies = [(token["head"] - 1, idx) for idx, token in enumerate(sentence) if token["head"] != 0]
         transitions = oracle(sentence, gold_dependencies)
-        features = pp.features()
-        wordid = torch.tensor(features["wordid"], dtype=torch.long)
-        posid = torch.tensor(features["posid"], dtype=torch.long)
-        labelid = torch.tensor(features["labelid"], dtype=torch.long)
-        
-        # Convert transitions to integers
-        transition_ids = [transition_to_idx[t] for t in transitions]
-        transitions_tensor = torch.tensor(transition_ids, dtype=torch.long)
-        
-        logits = model(wordid, posid, labelid)
-        loss = criterion(logits, transitions_tensor)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        total_loss += loss.item()
+        pp = PartialParse(sentence, wordvocab, posvocab, labelvocab)
+        for transition in transitions:
+            features = pp.features()
+            wordid = torch.tensor(features["wordid"], dtype=torch.long)
+            posid = torch.tensor(features["posid"], dtype=torch.long)
+            labelid = torch.tensor(features["labelid"], dtype=torch.long)
+            target = torch.tensor([transition_to_idx[transition]], dtype=torch.long)
+            logits = model(wordid, posid, labelid)
+            loss = criterion(logits, target)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            
+            total_loss += loss.item()
+            pp.parse_step(transition)
 
     print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {total_loss / len(train_sentences)}")
 

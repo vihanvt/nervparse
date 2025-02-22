@@ -45,31 +45,29 @@ class PartialParse():
         return children[-1]["label"] if children else "<NULL>"
     
     def features(self):
-        print(self.stack)
         features = {
             "wordid": [],
             "posid": [],
             "labelid": []
         }
 
-        #stack extraction- 3 words and 3 pos with 3 labels
+        #getting the top 3 elements of stack,buffer,pos for both,right and left labels for stack words
         for i in range(3):
             if i < len(self.stack):
                 word = self.stack[-i-1]["word"]
                 pos = self.stack[-i-1]["pos"]
-                features["wordid"].append(self.wordvocab.get(word, self.wordvocab["<UNK>"])) #unk token if not found
+                features["wordid"].append(self.wordvocab.get(word, self.wordvocab["<UNK>"]))#add unk if not found
                 features["posid"].append(self.posvocab.get(pos, self.posvocab["<UNK>"]))
-
                 left_label = self.leftchild(-i-1)
                 right_label = self.rightchild(-i-1)
-                features["labelid"].extend([self.labelvocab.get(left_label, self.labelvocab["<UNK>"]),self.labelvocab.get(right_label, self.labelvocab["<UNK>"])])
+                features["labelid"].extend([self.labelvocab.get(left_label, self.labelvocab["<UNK>"]),
+                                        self.labelvocab.get(right_label, self.labelvocab["<UNK>"])])
             else:
                 features["wordid"].append(self.wordvocab["<NULL>"])
                 features["posid"].append(self.posvocab["<NULL>"])
                 features["labelid"].extend([self.labelvocab["<NULL>"], self.labelvocab["<NULL>"]])
 
-
-        #buffer extraction- only words and pos
+        # Buffer extraction - next 3 words and pos
         for i in range(3):
             if i < len(self.buffer):
                 word = self.buffer[i]["word"]

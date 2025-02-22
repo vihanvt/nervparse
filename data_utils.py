@@ -15,6 +15,7 @@ def load(path):
                 parts = line.split("\t")
                 if len(parts) == 10:
                     token = {
+                        #note to self-check the conll file format for indexing
                         'word': parts[1],
                         'pos': parts[3],
                         'head': int(parts[6]),
