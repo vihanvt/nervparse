@@ -32,11 +32,21 @@ class ParserModel(nn.Module):
         logits = self.logits(drop)        
         return logits
     
-    def predict(self,features_batch):
-        wordid=torch.tensor([feature["wordid"] for feature in features_batch],dtype=torch.long)
-        posid=torch.tensor([feature["posid"] for feature in features_batch],dtype=torch.long)
-        labelid=torch.tensor([feature["labelid"] for feature in features_batch],dtype=torch.long)
+    def predict(self, features_batch):
+        wordid = torch.tensor([feature["wordid"] for feature in features_batch], dtype=torch.long)
+        posid = torch.tensor([feature["posid"] for feature in features_batch], dtype=torch.long)
+        labelid = torch.tensor([feature["labelid"] for feature in features_batch], dtype=torch.long)
+
+        batch_size = wordid.shape[0]
+
+        wordemb = self.wordembed(wordid).view(batch_size, 6 * 50)
+        posemb = self.posembed(posid).view(batch_size, 6 * 20)
+        labelemb = self.labelembed(labelid).view(batch_size, 6 * 20)
+
+        joined = torch.cat([wordemb, posemb, labelemb], dim=1)
+
         with torch.no_grad():
-            logits=self.forward(wordid,posid,labelid)
-            print(f"Logits shape: {logits.shape}")
-            return torch.argmax(logits,dim=-1).tolist()
+            logits = self.hidden(joined)
+            logits = self.logits(logits)
+            return torch.argmax(logits, dim=-1).tolist()
+

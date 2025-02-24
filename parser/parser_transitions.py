@@ -1,5 +1,6 @@
 import sys
 import data_utils
+import time
 class PartialParse():
     def __init__(self, sentence,wordvocab,posvocab,labelvocab):
         self.sentence = [dict(tok, index=i) for i, tok in enumerate(sentence)]
@@ -84,15 +85,14 @@ def minibatch_parse(sentences, model, batch_size, wordvocab, posvocab, labelvoca
     dependencies = []
     partial_parses = [PartialParse(sentence.copy(), wordvocab, posvocab, labelvocab) for sentence in sentences]
     unfinished = partial_parses.copy()
-    
-    print(f"Total sentences to parse: {len(unfinished)}")
+
     while unfinished:
         batch = unfinished[:batch_size]
-        print(f"Processing batch of size {len(batch)}")
         features_batch = [pp.features() for pp in batch]
         transitions = model.predict(features_batch)
         for pp, trans in zip(batch, transitions):
             pp.parse_step(trans)
             if len(pp.stack) == 1 and not pp.buffer:
                 unfinished.remove(pp)
+
     return [pp.dependencies for pp in partial_parses]
