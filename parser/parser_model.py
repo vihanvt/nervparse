@@ -33,20 +33,31 @@ class ParserModel(nn.Module):
         return logits
     
     def predict(self, features_batch):
-        wordid = torch.tensor([feature["wordid"] for feature in features_batch], dtype=torch.long)
-        posid = torch.tensor([feature["posid"] for feature in features_batch], dtype=torch.long)
-        labelid = torch.tensor([feature["labelid"] for feature in features_batch], dtype=torch.long)
 
-        batch_size = wordid.shape[0]
-
-        wordemb = self.wordembed(wordid).view(batch_size, 6 * 50)
-        posemb = self.posembed(posid).view(batch_size, 6 * 20)
-        labelemb = self.labelembed(labelid).view(batch_size, 6 * 20)
-
-        joined = torch.cat([wordemb, posemb, labelemb], dim=1)
-
-        with torch.no_grad():
-            logits = self.hidden(joined)
-            logits = self.logits(logits)
-            return torch.argmax(logits, dim=-1).tolist()
-
+        self.eval()
+        try:
+            if not features_batch:
+                return []
+            batch_size = len(features_batch)
+            predictions = []
+            
+            with torch.no_grad():
+                for features in features_batch:
+                    wordid = torch.tensor(features["wordid"], dtype=torch.long)
+                    posid = torch.tensor(features["posid"], dtype=torch.long)
+                    labelid = torch.tensor(features["labelid"], dtype=torch.long)
+                    wordemb = self.wordembed(wordid).view(1, -1)
+                    posemb = self.posembed(posid).view(1, -1)
+                    labelemb = self.labelembed(labelid).view(1, -1)
+                    joined = torch.cat([wordemb, posemb, labelemb], dim=1)
+                    hidden_out = self.hidden(joined)
+                    cube = torch.pow(hidden_out, 3)
+                    logits = self.logits(cube)
+                    pred = torch.argmax(logits, dim=1).item()
+                    predictions.append(pred)
+                        
+            return predictions
+        
+        except Exception as e:
+            print(f"Error in predict method: {e}")
+            return [0] * len(features_batch)

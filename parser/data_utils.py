@@ -4,7 +4,6 @@ from collections import Counter
 from torch.utils.data import Dataset, DataLoader
 import torch
 
-
 def load(path):
     sentences = []
     with open(path, 'r', encoding='utf-8') as fob:
@@ -14,13 +13,8 @@ def load(path):
             if line:
                 parts = line.split("\t")
                 if len(parts) == 10:
-                    token = {
-                        #note to self-check the conll file format for indexing
-                        'word': parts[1],
-                        'pos': parts[3],
-                        'head': int(parts[6]),
-                        'label': parts[7]
-                    }
+                    #note to self-check the conll file format for indexing
+                    token={'word': parts[1],'pos': parts[3],'head': int(parts[6]),'label': parts[7]}
                     sentence.append(token)
             elif sentence:
                 sentences.append(sentence)
@@ -30,6 +24,7 @@ def load(path):
     return sentences
 
 def vocab(train_data,min_freq=2):
+    #words that occur less than twice are ignored
     #the goal is to count all the unique words,labels,pos in the dataset
     #to return - 3 different dicts with seperate counts- dont put in single one
     #self-note: defining 3 counters for words,pos and labels
@@ -48,7 +43,7 @@ def vocab(train_data,min_freq=2):
 
     for i,j in wc.items(): #(i,j)=(words,count)
         if j>=min_freq: 
-            wordvocab[i]=len(wordvocab)
+            wordvocab[i]=len(wordvocab)#to get the each unique word occurence,len is used to give index 
     for i,j in pc.items():
             posvocab[i]=len(posvocab)
     for i,j in lc.items():
