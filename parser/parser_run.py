@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from data_utils import load, vocab
+from parser_utils import load, vocab
 from parser_transitions import PartialParse
 from parser_model import ParserModel
 
@@ -61,7 +61,7 @@ converter = {"S": 0, "LA": 1, "RA": 2}
 for epoch in range(epochs):
     total_loss = 0
     for ids, sentence in enumerate(sentences):
-        print(f"Epoch {epoch + 1}, Processing sentence {id + 1}/{len(sentences)}")
+        print(f"Epoch {epoch + 1}, Processing sentence {ids + 1}/{len(sentences)}")
         pp = PartialParse(sentence, wordvocab, posvocab, labelvocab)
         golddep = [(token["head"] - 1, ids) for ids, token in enumerate(sentence) if token["head"] != 0]
 

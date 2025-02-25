@@ -1,6 +1,6 @@
 import os
 import torch
-from data_utils import load, vocab
+from parser_utils import load, vocab
 from parser_model import ParserModel
 from parser_transitions import PartialParse, minibatch_parse
 

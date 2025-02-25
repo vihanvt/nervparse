@@ -1,5 +1,5 @@
 import sys
-import data_utils
+import parser_utils as parser_utils
  
 class PartialParse():
     def __init__(self, sentence, wordvocab, posvocab, labelvocab):

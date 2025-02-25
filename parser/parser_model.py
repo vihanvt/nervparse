@@ -1,7 +1,7 @@
 import argparse
 import numpy as np
 import torch 
-import data_utils
+import parser_utils as parser_utils
 import parser_transitions
 import torch.nn as nn
 import torch.nn.functional as F
