@@ -1,4 +1,6 @@
 # nervparse
+![nervparse](https://github.com/user-attachments/assets/655f71ba-3ed7-4078-8828-468a56fcddda)
+
 A neural network based dependency parser implemented from the paper **"A Fast and Accurate Dependency Parser using Neural Networks"** by Danqi Chen and Christopher D. Manning.
 > [!NOTE]]
 > **Status- Active Development**
@@ -6,113 +8,7 @@ A neural network based dependency parser implemented from the paper **"A Fast an
 > 
 > 
 > 
-![cover](https://github.com/user-attachments/assets/3fe56a09-31b8-478c-9404-beac07985933)
 
-<p align="center">
-
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 100">
-
-    <!-- n -->
-
-    <rect x="10" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="30" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="50" y="30" width="20" height="50" fill="white"/>
-
-    
-
-    <!-- e -->
-
-    <rect x="80" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="100" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="100" y="45" width="20" height="20" fill="white"/>
-
-    <rect x="100" y="60" width="20" height="20" fill="white"/>
-
-    
-
-    <!-- r -->
-
-    <rect x="130" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="150" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="150" y="45" width="20" height="5" fill="white"/>
-
-    
-
-    <!-- v -->
-
-    <rect x="180" y="30" width="20" height="40" fill="white"/>
-
-    <rect x="200" y="70" width="20" height="10" fill="white"/>
-
-    <rect x="220" y="30" width="20" height="40" fill="white"/>
-
-    
-
-    <!-- p -->
-
-    <rect x="250" y="30" width="20" height="70" fill="white"/>
-
-    <rect x="270" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="270" y="45" width="20" height="20" fill="white"/>
-
-    <rect x="290" y="30" width="10" height="35" fill="white"/>
-
-    
-
-    <!-- a -->
-
-    <rect x="310" y="45" width="20" height="35" fill="white"/>
-
-    <rect x="330" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="350" y="45" width="10" height="35" fill="white"/>
-
-    
-
-    <!-- r -->
-
-    <rect x="370" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="390" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="390" y="45" width="20" height="5" fill="white"/>
-
-    
-
-    <!-- s -->
-
-    <rect x="420" y="30" width="30" height="20" fill="white"/>
-
-    <rect x="420" y="45" width="30" height="20" fill="white"/>
-
-    <rect x="420" y="60" width="30" height="20" fill="white"/>
-
-    <rect x="420" y="30" width="10" height="20" fill="white"/>
-
-    <rect x="440" y="60" width="10" height="20" fill="white"/>
-
-    
-
-    <!-- e -->
-
-    <rect x="460" y="30" width="20" height="50" fill="white"/>
-
-    <rect x="480" y="30" width="20" height="20" fill="white"/>
-
-    <rect x="480" y="45" width="20" height="20" fill="white"/>
-
-    <rect x="480" y="60" width="20" height="20" fill="white"/>
-
-  </svg>
-
-</p>
 
 A neural network-based dependency parser implemented from the paper...
 
