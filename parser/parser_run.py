@@ -35,7 +35,7 @@ def oracle(sentence, gold_dependencies):
         else:
             break
 
-    print(f"Transitions: {transitions}")  # Print transitions for debugging
+    print(f"Transitions: {transitions}")
     return transitions
 
 sentences = load("../data/train.conll")
