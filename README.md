@@ -6,6 +6,8 @@ A neural network based dependency parser implemented from the paper **"A Fast an
 > 
 > 
 > 
+![cover](https://github.com/user-attachments/assets/3fe56a09-31b8-478c-9404-beac07985933)
+
 
 ## Project Structure
 ```
