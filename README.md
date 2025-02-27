@@ -1,7 +1,7 @@
-# NervParse
-
+# nervparse
 A neural network based dependency parser implemented from the paper **"A Fast and Accurate Dependency Parser using Neural Networks"** by Danqi Chen and Christopher D. Manning.
-> [!NOTE]
+> [!NOTE]]
+> Status- Active Development
 > **Not production-ready - created for learning purposes only**
 > 
 > 
