@@ -1,5 +1,6 @@
 # nervparse
-![nervparse(2)](https://github.com/user-attachments/assets/f6e50c4b-2cf0-47b5-bd2b-ddcb893e354e)
+![nervparse(1)](https://github.com/user-attachments/assets/a6c04565-5a11-4511-8323-1564aea91471)
+
 
 A neural network based dependency parser implemented from the paper **"A Fast and Accurate Dependency Parser using Neural Networks"** by Danqi Chen and Christopher D. Manning.
 
@@ -44,6 +45,8 @@ For training the model according to your own dataset, change the files in data f
 python parser_run.py
 python parser_eval.py
 ```
+## Example Output
+![eval](https://github.com/user-attachments/assets/8e78509a-f727-4bf6-98a0-5be032dc9b2b)
 
 ## Basic Features
 - A multi-layer perceptron architecture for the neural network is used to predict the relations/dependencies between words in sentence to get the structured representation of its grammar.
