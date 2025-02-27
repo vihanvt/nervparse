@@ -45,7 +45,7 @@ A neural network based dependency parser implemented from the paper **"A Fast an
 Dev UAS: 63.63%
 Test UAS: 64.54%
 
-## Project Roadmap
+## Project Flow
 
 - [x] Data Extraction
 - [x] Vocabulary Building
@@ -57,4 +57,4 @@ Test UAS: 64.54%
 - [x] Model Evaluation 
 - [ ] Dependency Label Prediction
 - [ ] Training on complete dataset
-- [ ] Hyperparameter Tuning ****
+- [ ] Hyperparameter Tuning 
