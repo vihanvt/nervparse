@@ -46,7 +46,8 @@ python parser_run.py
 python parser_eval.py
 ```
 ## Example Output
-![eval](https://github.com/user-attachments/assets/8e78509a-f727-4bf6-98a0-5be032dc9b2b)
+![eval](https://github.com/user-attachments/assets/d791f8e3-b27c-4e66-9e64-de8a3ea10526)
+
 
 ## Basic Features
 - A multi-layer perceptron architecture for the neural network is used to predict the relations/dependencies between words in sentence to get the structured representation of its grammar.
