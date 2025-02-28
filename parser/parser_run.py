@@ -5,6 +5,8 @@ from parser_utils import load, vocab
 from parser_transitions import PartialParse
 from parser_model import ParserModel
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 def oracle(sentence, gold_dependencies):
     pp = PartialParse(sentence, wordvocab, posvocab, labelvocab)
     transitions = []
@@ -18,12 +20,10 @@ def oracle(sentence, gold_dependencies):
         if len(pp.stack) >= 2:
             top = pp.stack[-1]
             second = pp.stack[-2]
-            #checking the last and second for left arc
             if (top["index"], second["index"]) in golddep:
                 transitions.append("LA")
                 pp.parse_step("LA")
                 continue
-            #check the second and last for right arc
             elif (second["index"], top["index"]) in golddep:
                 transitions.append("RA")
                 pp.parse_step("RA")
@@ -40,10 +40,15 @@ def oracle(sentence, gold_dependencies):
 
 sentences = load("../data/train.conll")
 wordvocab, posvocab, labelvocab = vocab(sentences)
-sentences = sentences[:1500]
+sentences=sentences[:10000]
 print(f"Training on a small dataset of {len(sentences)} sentences")
-model = ParserModel(wordvocabsize=len(wordvocab),posvocabsize=len(posvocab),labelvocabsize=len(labelvocab),worddim=50,posdim=20,labeldim=20,hiddenneurons=200,dropout=0.3)
-#initialising the weights using xavier
+
+model = ParserModel(
+    wordvocabsize=len(wordvocab),
+    posvocabsize=len(posvocab),
+    labelvocabsize=len(labelvocab),
+    worddim=50, posdim=20, labeldim=20, hiddenneurons=200, dropout=0.3
+).to(device)
 
 def weights(m):
     if isinstance(m, nn.Linear):
@@ -51,13 +56,12 @@ def weights(m):
         nn.init.zeros_(m.bias)
 model.apply(weights)
 
-#defining loss
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-lossfunc = nn.CrossEntropyLoss()
-#training here baby
+lossfunc = nn.CrossEntropyLoss().to(device)
+
 epochs = 10
-#represent with numbers for faster computations
 converter = {"S": 0, "LA": 1, "RA": 2}
+
 for epoch in range(epochs):
     total_loss = 0
     for ids, sentence in enumerate(sentences):
@@ -67,21 +71,25 @@ for epoch in range(epochs):
 
         transitions = oracle(sentence, golddep)
         pp = PartialParse(sentence, wordvocab, posvocab, labelvocab)
+
         for transition in transitions:
             features = pp.features()
-            wordid = torch.tensor(features["wordid"], dtype=torch.long)
-            posid = torch.tensor(features["posid"], dtype=torch.long)
-            labelid = torch.tensor(features["labelid"], dtype=torch.long)
-            target = torch.tensor([converter[transition]], dtype=torch.long)
+            wordid = torch.tensor(features["wordid"], dtype=torch.long).to(device)
+            posid = torch.tensor(features["posid"], dtype=torch.long).to(device)
+            labelid = torch.tensor(features["labelid"], dtype=torch.long).to(device)
+            target = torch.tensor([converter[transition]], dtype=torch.long).to(device)
             logits = model(wordid, posid, labelid)
             loss = lossfunc(logits, target)
+
             optimizer.zero_grad()
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0) 
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
+
             total_loss += loss.item()
             pp.parse_step(transition)
 
     print(f"Epoch {epoch + 1}/{epochs}, Loss: {total_loss / len(sentences)}")
+
 torch.save(model.state_dict(), "parser_model.pth")
 print("Training complete. Model saved to parser_model.pth.")
